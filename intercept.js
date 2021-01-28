@@ -5,8 +5,11 @@ const {cachedCleverMerge} = require('webpack/lib/util/cleverMerge');
 
 const customStoreDir = path.resolve(__dirname, '..', '..', '..', 'src', 'overrides', 'venia-ui');
 const customLibDir = path.resolve(__dirname, '..', '..', '..', 'src', 'overrides', 'peregrine');
+const customPagebuilderDir = path.resolve(__dirname, '..', '..', '..', 'src', 'overrides', 'pagebuilder');
+
 const veniaUiModulePath = path.resolve(__dirname, '..', '..', '..', 'node_modules', '@magento', 'venia-ui', 'lib');
 const peregrineModulePath = path.resolve(__dirname, '..', '..', '..', 'node_modules', '@magento', 'peregrine', 'lib');
+const pagebuilderModulePath = path.resolve(__dirname, '..', '..', '..', 'node_modules', '@magento', 'pagebuilder', 'lib');
 
 const myResolverPlugin = new VeniaUiResolverPlugin({
     name: name,
@@ -20,6 +23,12 @@ const myPeregrineResolverPlugin = new VeniaUiResolverPlugin({
     veniaUiModulePath: peregrineModulePath
 });
 
+const myPagebuilderResolverPlugin = new VeniaUiResolverPlugin({
+    name: 'fooman/pagebuilder-override-resolver',
+    projectPath: customPagebuilderDir,
+    veniaUiModulePath: pagebuilderModulePath
+});
+
 module.exports = targets => {
     const webpackCompiler = targets.of('@magento/pwa-buildpack').webpackCompiler;
     webpackCompiler.tap(compiler =>
@@ -28,7 +37,7 @@ module.exports = targets => {
             .tap('AddVeniaResolverToWebpackConfig', resolveOptions => {
                 const plugin = Object.assign(
                     {
-                        plugins: [myResolverPlugin, myPeregrineResolverPlugin]
+                        plugins: [myResolverPlugin, myPeregrineResolverPlugin, myPagebuilderResolverPlugin]
                     });
                 return cachedCleverMerge(plugin, resolveOptions);
             })
@@ -39,7 +48,7 @@ module.exports = targets => {
             .tap('AddVeniaResolverToWebpackConfig', resolveOptions => {
                 const plugin = Object.assign(
                     {
-                        plugins: [myResolverPlugin, myPeregrineResolverPlugin]
+                        plugins: [myResolverPlugin, myPeregrineResolverPlugin, myPagebuilderResolverPlugin]
                     });
                 return cachedCleverMerge(plugin, resolveOptions);
             })
